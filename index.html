@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目录列表</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f3f5;
+            font-weight: bold;
+        }
+        .file-link, .download-link, .directory-link {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .directory-link {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .back-link {
+            color: #6c757d;
+            margin-right: 10px;
+        }
+        .path-info {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>目录内容</h1>
+    <div class="path-info">当前路径：{{ current_path }}</div>
+    <table>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>大小</th>
+                <th>创建日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if current_path != '/' %}
+            <tr>
+                <td><a class="back-link" href="/browse/">返回上级目录</a></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            {% endif %}
+            {% for item in items %}
+            <tr>
+                <td>
+                    {% if item.type == 'file' %}
+                        <a class="file-link" href="{{ item.url }}">{{ item.name }}</a>
+                    {% else %}
+                        <a class="directory-link" href="/browse/{{ current_path.lstrip('/') }}/{{ item.name }}">{{ item.name }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.modified }}</td>
+                <td>
+                    {% if item.type == 'file' %}
+                        <a class="download-link" href="{{ item.url }}">下载</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
